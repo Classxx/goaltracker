@@ -1,9 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GoalTrack Pro — AI-трекинг целей</title>
+  <title>GoalTrack Pro вЂ” AI-С‚СЂРµРєРёРЅРі С†РµР»РµР№</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,49 +16,49 @@
     <header>
       <div class="title">
         <h1>GoalTrack Pro</h1>
-        <span class="pill">AI • Аналитика • Геймификация</span>
+        <span class="pill">AI вЂў РђРЅР°Р»РёС‚РёРєР°</span>
       </div>
       <div class="toolbar">
         <div class="search">
-          <input id="search" placeholder="🔍 Поиск целей…" />
+          <input id="search" placeholder="рџ”Ќ РџРѕРёСЃРє С†РµР»РµР№вЂ¦" />
         </div>
         <div class="custom-select">
           <select id="sortBy">
-            <option value="progress">По прогрессу</option>
-            <option value="name">По названию</option>
-            <option value="date">По дате</option>
-            <option value="priority">По приоритету</option>
-            <option value="category">По категории</option>
+            <option value="progress">РџРѕ РїСЂРѕРіСЂРµСЃСЃСѓ</option>
+            <option value="name">РџРѕ РЅР°Р·РІР°РЅРёСЋ</option>
+            <option value="date">РџРѕ РґР°С‚Рµ</option>
+            <option value="priority">РџРѕ РїСЂРёРѕСЂРёС‚РµС‚Сѓ</option>
+            <option value="category">РџРѕ РєР°С‚РµРіРѕСЂРёРё</option>
           </select>
         </div>
         <div class="custom-select">
           <select id="filterBy">
-            <option value="all">Все цели</option>
-            <option value="active">Активные</option>
-            <option value="completed">Завершенные</option>
-            <option value="financial">Финансовые</option>
-            <option value="challenge">Челленджи</option>
-            <option value="health">Здоровье</option>
-            <option value="education">Образование</option>
+            <option value="all">Р’СЃРµ С†РµР»Рё</option>
+            <option value="active">РђРєС‚РёРІРЅС‹Рµ</option>
+            <option value="completed">Р—Р°РІРµСЂС€РµРЅРЅС‹Рµ</option>
+            <option value="financial">Р¤РёРЅР°РЅСЃРѕРІС‹Рµ</option>
+            <option value="challenge">Р§РµР»Р»РµРЅРґР¶Рё</option>
+            <option value="health">Р—РґРѕСЂРѕРІСЊРµ</option>
+            <option value="education">РћР±СЂР°Р·РѕРІР°РЅРёРµ</option>
           </select>
         </div>
-        <button class="btn ghost" id="statsBtn" title="Статистика">📊</button>
-        <button class="btn ghost" id="achievementsBtn" title="Достижения">🏆</button>
-        <button class="btn ghost" id="exportBtn" title="Экспорт данных">💾</button>
-        <button class="btn ghost" id="importBtn" title="Импорт данных">📁</button>
-        <button class="btn ghost" id="settingsBtn" title="Настройки">⚙️</button>
+        <button class="btn ghost" id="statsBtn" title="РЎС‚Р°С‚РёСЃС‚РёРєР°">рџ“Љ</button>
+        <button class="btn ghost" id="achievementsBtn" title="Р”РѕСЃС‚РёР¶РµРЅРёСЏ">рџЏ†</button>
+        <button class="btn ghost" id="exportBtn" title="Р­РєСЃРїРѕСЂС‚ РґР°РЅРЅС‹С…">рџ’ѕ</button>
+        <button class="btn ghost" id="importBtn" title="РРјРїРѕСЂС‚ РґР°РЅРЅС‹С…">рџ“Ѓ</button>
+        <button class="btn ghost" id="settingsBtn" title="РќР°СЃС‚СЂРѕР№РєРё">вљ™пёЏ</button>
       </div>
     </header>
 
     <main>
       <section id="list" class="grid"></section>
       <div id="empty" class="empty" style="display:none">
-        <div>Пока нет целей. Нажмите «+», чтобы добавить первую цель.</div>
+        <div>РџРѕРєР° РЅРµС‚ С†РµР»РµР№. РќР°Р¶РјРёС‚Рµ В«+В», С‡С‚РѕР±С‹ РґРѕР±Р°РІРёС‚СЊ РїРµСЂРІСѓСЋ С†РµР»СЊ.</div>
         <div id="motivationalQuote" style="margin-top: 20px; font-style: italic; color: var(--text-secondary);"></div>
       </div>
     </main>
 
-    <button class="fab" id="fab" title="Добавить цель" aria-label="Добавить цель">
+    <button class="fab" id="fab" title="Р”РѕР±Р°РІРёС‚СЊ С†РµР»СЊ" aria-label="Р”РѕР±Р°РІРёС‚СЊ С†РµР»СЊ">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5a1 1 0 0 1 2 0v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H5a1 1 0 1 1 0-2h6z"/></svg>
     </button>
   </div>
@@ -67,109 +67,31 @@
   <div class="modal" id="modalForm">
     <div class="sheet">
       <header>
-        <strong id="formTitle">Новая цель</strong>
+        <strong id="formTitle">РќРѕРІР°СЏ С†РµР»СЊ</strong>
       </header>
       <div class="content">
         <form id="goalForm">
-          <label>Название</label>
-          <input id="f_name" required placeholder="Например: Накопить 3 000 000 ₽" />
+          <label>РќР°Р·РІР°РЅРёРµ</label>
+          <input id="f_name" required placeholder="РќР°РїСЂРёРјРµСЂ: РќР°РєРѕРїРёС‚СЊ 3 000 000 в‚Ѕ" />
           
-          <label>Описание (необязательно)</label>
-          <textarea id="f_description" placeholder="Добавьте описание цели, мотивацию или дополнительные детали..." rows="3"></textarea>
+          <label>РћРїРёСЃР°РЅРёРµ (РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ)</label>
+          <textarea id="f_description" placeholder="Р”РѕР±Р°РІСЊС‚Рµ РѕРїРёСЃР°РЅРёРµ С†РµР»Рё, РјРѕС‚РёРІР°С†РёСЋ РёР»Рё РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РґРµС‚Р°Р»Рё..." rows="3"></textarea>
 
           <div class="row">
             <div>
-              <label>Тип цели</label>
-              <div class="custom-select">
-                <select id="f_type">
-                  <option value="financial">Финансовая</option>
-                  <option value="challenge">Челлендж (дни)</option>
-                  <option value="counter">Счётчик (штук/км/задач)</option>
-                  <option value="reading">Чтение (страницы)</option>
-                  <option value="learning">Учёба (часы)</option>
-                  <option value="weight">Вес (кг)</option>
-                </select>
-              </div>
-            </div>
-            <div>
-              <label>Категория</label>
-              <div class="custom-select">
-                <select id="f_category">
-                  <option value="personal">Личное развитие</option>
-                  <option value="health">Здоровье</option>
-                  <option value="career">Карьера</option>
-                  <option value="finance">Финансы</option>
-                  <option value="education">Образование</option>
-                  <option value="hobby">Хобби</option>
-                  <option value="social">Социальное</option>
-                  <option value="spiritual">Духовное</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label>Быстрые шаблоны</label>
-              <div class="custom-select">
-                <select id="f_template">
-                  <option value="">— Не использовать —</option>
-                  <option value="tpl_money">Накопить 3 000 000 ₽ (старт 1 250 000)</option>
-                  <option value="tpl_pushups">100 дней по 300 отжиманий</option>
-                  <option value="tpl_read">Прочитать 1 500 стр.</option>
-                  <option value="tpl_learning">Выучить Python: 100 часов</option>
-                  <option value="tpl_run">Пробежать 500 км</option>
-                  <option value="tpl_weight">Сбросить вес: 95 → 80 кг</option>
-                  <option value="tpl_meditation">30 дней медитации</option>
-                  <option value="tpl_water">Пить 2 литра воды в день</option>
-                  <option value="tpl_sleep">Спать 8 часов в день</option>
-                  <option value="tpl_books">Прочитать 12 книг в год</option>
-                  <option value="tpl_language">Изучить английский язык</option>
-                  <option value="tpl_fitness">Тренироваться 3 раза в неделю</option>
-                </select>
-              </div>
-            </div>
-            <div>
-              <label>Приоритет</label>
-              <div class="custom-select">
-                <select id="f_priority">
-                  <option value="low">Низкий</option>
-                  <option value="medium">Средний</option>
-                  <option value="high">Высокий</option>
-                  <option value="critical">Критический</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label>Дедлайн (необязательно)</label>
+              <label>�"��?�>�����? (�?��?�+�?�����'��>�?�?�?)</label>
               <input id="f_deadline" type="date" />
-            </div>
-            <div>
-              <label>Напоминание за</label>
-              <div class="custom-select">
-                <select id="f_reminder">
-                  <option value="0">Не напоминать</option>
-                  <option value="1">1 день</option>
-                  <option value="3">3 дня</option>
-                  <option value="7">1 неделя</option>
-                  <option value="14">2 недели</option>
-                  <option value="30">1 месяц</option>
-                </select>
-              </div>
             </div>
           </div>
 
           <!-- FINANCIAL -->
           <div class="row" data-for="financial">
             <div>
-              <label>Целевая сумма, ₽</label>
+              <label>Р¦РµР»РµРІР°СЏ СЃСѓРјРјР°, в‚Ѕ</label>
               <input id="f_targetAmount" type="number" min="1" step="100" placeholder="3000000" />
             </div>
             <div>
-              <label>Текущая сумма, ₽</label>
+              <label>РўРµРєСѓС‰Р°СЏ СЃСѓРјРјР°, в‚Ѕ</label>
               <input id="f_currentAmount" type="number" min="0" step="100" placeholder="0" />
             </div>
           </div>
@@ -177,29 +99,29 @@
           <!-- CHALLENGE -->
           <div class="row" data-for="challenge" style="display:none">
             <div>
-              <label>Количество дней</label>
+              <label>РљРѕР»РёС‡РµСЃС‚РІРѕ РґРЅРµР№</label>
               <input id="f_days" type="number" min="1" step="1" placeholder="100" />
             </div>
             <div>
-              <label>Уже выполнено дней</label>
+              <label>РЈР¶Рµ РІС‹РїРѕР»РЅРµРЅРѕ РґРЅРµР№</label>
               <input id="f_daysDone" type="number" min="0" step="1" placeholder="0" />
             </div>
           </div>
           <div class="row" data-for="challenge" style="display:none">
             <div>
-              <label>Действий в день (необязательно)</label>
-              <input id="f_daily" type="number" min="1" step="1" placeholder="Например: 300" />
+              <label>Р”РµР№СЃС‚РІРёР№ РІ РґРµРЅСЊ (РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ)</label>
+              <input id="f_daily" type="number" min="1" step="1" placeholder="РќР°РїСЂРёРјРµСЂ: 300" />
             </div>
           </div>
 
           <!-- COUNTER -->
           <div class="row" data-for="counter" style="display:none">
             <div>
-              <label>Нужно выполнить (шт/км/задач)</label>
+              <label>РќСѓР¶РЅРѕ РІС‹РїРѕР»РЅРёС‚СЊ (С€С‚/РєРј/Р·Р°РґР°С‡)</label>
               <input id="f_totalCount" type="number" min="1" step="1" placeholder="500" />
             </div>
             <div>
-              <label>Уже выполнено</label>
+              <label>РЈР¶Рµ РІС‹РїРѕР»РЅРµРЅРѕ</label>
               <input id="f_currentCount" type="number" min="0" step="1" placeholder="0" />
             </div>
           </div>
@@ -207,11 +129,11 @@
           <!-- READING -->
           <div class="row" data-for="reading" style="display:none">
             <div>
-              <label>Всего страниц</label>
+              <label>Р’СЃРµРіРѕ СЃС‚СЂР°РЅРёС†</label>
               <input id="f_totalPages" type="number" min="1" step="1" placeholder="1500" />
             </div>
             <div>
-              <label>Прочитано страниц</label>
+              <label>РџСЂРѕС‡РёС‚Р°РЅРѕ СЃС‚СЂР°РЅРёС†</label>
               <input id="f_readPages" type="number" min="0" step="1" placeholder="0" />
             </div>
           </div>
@@ -219,37 +141,37 @@
           <!-- LEARNING -->
           <div class="row" data-for="learning" style="display:none">
             <div>
-              <label>Цель (часов)</label>
+              <label>Р¦РµР»СЊ (С‡Р°СЃРѕРІ)</label>
               <input id="f_targetHours" type="number" min="1" step="1" placeholder="100" />
             </div>
             <div>
-              <label>Уже изучено (минут)</label>
+              <label>РЈР¶Рµ РёР·СѓС‡РµРЅРѕ (РјРёРЅСѓС‚)</label>
               <input id="f_spentMin" type="number" min="0" step="10" placeholder="0" />
             </div>
           </div>
-          <div class="hint" data-for="learning" style="display:none">Совет: логируйте минуты — так удобнее; мы пересчитаем в часы автоматически.</div>
+          <div class="hint" data-for="learning" style="display:none">РЎРѕРІРµС‚: Р»РѕРіРёСЂСѓР№С‚Рµ РјРёРЅСѓС‚С‹ вЂ” С‚Р°Рє СѓРґРѕР±РЅРµРµ; РјС‹ РїРµСЂРµСЃС‡РёС‚Р°РµРј РІ С‡Р°СЃС‹ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё.</div>
 
           <!-- WEIGHT -->
           <div class="row" data-for="weight" style="display:none">
             <div>
-              <label>Вес старт, кг</label>
+              <label>Р’РµСЃ СЃС‚Р°СЂС‚, РєРі</label>
               <input id="f_w_start" type="number" min="1" step="0.1" placeholder="95" />
             </div>
             <div>
-              <label>Целевой вес, кг</label>
+              <label>Р¦РµР»РµРІРѕР№ РІРµСЃ, РєРі</label>
               <input id="f_w_target" type="number" min="1" step="0.1" placeholder="80" />
             </div>
           </div>
           <div class="row" data-for="weight" style="display:none">
             <div>
-              <label>Текущий вес, кг</label>
+              <label>РўРµРєСѓС‰РёР№ РІРµСЃ, РєРі</label>
               <input id="f_w_current" type="number" min="1" step="0.1" placeholder="95" />
             </div>
           </div>
 
           <div class="actions">
-            <button type="button" class="btn ghost" id="cancelForm">Отмена</button>
-            <button class="btn primary" type="submit">Сохранить</button>
+            <button type="button" class="btn ghost" id="cancelForm">РћС‚РјРµРЅР°</button>
+            <button class="btn primary" type="submit">РЎРѕС…СЂР°РЅРёС‚СЊ</button>
           </div>
         </form>
       </div>
@@ -260,7 +182,7 @@
   <div class="modal" id="modalDetails">
     <div class="sheet">
       <header>
-        <strong id="detailsTitle">Цель</strong>
+        <strong id="detailsTitle">Р¦РµР»СЊ</strong>
       </header>
       <div class="content" id="detailsContent"></div>
     </div>
@@ -270,14 +192,14 @@
   <div class="modal" id="modalStats">
     <div class="sheet">
       <header>
-        <strong>📊 Статистика достижений</strong>
+        <strong>рџ“Љ РЎС‚Р°С‚РёСЃС‚РёРєР° РґРѕСЃС‚РёР¶РµРЅРёР№</strong>
       </header>
       <div class="content" id="statsContent">
         <div class="stats-grid" id="statsGrid">
           <!-- Stats will be populated by JavaScript -->
         </div>
         <div class="hint">
-          💡 Анализируйте свой прогресс и находите закономерности в достижении целей
+          рџ’Ў РђРЅР°Р»РёР·РёСЂСѓР№С‚Рµ СЃРІРѕР№ РїСЂРѕРіСЂРµСЃСЃ Рё РЅР°С…РѕРґРёС‚Рµ Р·Р°РєРѕРЅРѕРјРµСЂРЅРѕСЃС‚Рё РІ РґРѕСЃС‚РёР¶РµРЅРёРё С†РµР»РµР№
         </div>
       </div>
     </div>
@@ -287,14 +209,14 @@
   <div class="modal" id="modalAchievements">
     <div class="sheet">
       <header>
-        <strong>🏆 Достижения</strong>
+        <strong>рџЏ† Р”РѕСЃС‚РёР¶РµРЅРёСЏ</strong>
       </header>
       <div class="content" id="achievementsContent">
         <div id="achievementsList">
           <!-- Achievements will be populated by JavaScript -->
         </div>
         <div class="hint">
-          🎯 Разблокируйте новые достижения, достигая целей и устанавливая рекорды
+          рџЋЇ Р Р°Р·Р±Р»РѕРєРёСЂСѓР№С‚Рµ РЅРѕРІС‹Рµ РґРѕСЃС‚РёР¶РµРЅРёСЏ, РґРѕСЃС‚РёРіР°СЏ С†РµР»РµР№ Рё СѓСЃС‚Р°РЅР°РІР»РёРІР°СЏ СЂРµРєРѕСЂРґС‹
         </div>
       </div>
     </div>
@@ -304,48 +226,33 @@
   <div class="modal" id="modalSettings">
     <div class="sheet">
       <header>
-        <strong>⚙️ Настройки</strong>
+        <strong>вљ™пёЏ РќР°СЃС‚СЂРѕР№РєРё</strong>
       </header>
       <div class="content" id="settingsContent">
         <div class="row">
           <div>
-            <label>Уведомления</label>
-            <div class="custom-select">
-              <select id="notificationsEnabled">
-                <option value="true">Включены</option>
-                <option value="false">Выключены</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label>Время напоминаний</label>
-            <input id="reminderTime" type="time" value="09:00" />
-          </div>
-        </div>
-        <div class="row">
-          <div>
-            <label>Тема</label>
+            <label>����?��</label>
             <div class="custom-select">
               <select id="theme">
-                <option value="dark">Тёмная</option>
-                <option value="light">Светлая</option>
-                <option value="auto">Авто</option>
+                <option value="dark">���'�?�?���?</option>
+                <option value="light">���?��'�>���?</option>
+                <option value="auto">�?�?�'�?</option>
               </select>
             </div>
           </div>
           <div>
-            <label>Язык</label>
+            <label>�����<��</label>
             <div class="custom-select">
               <select id="language">
-                <option value="ru">Русский</option>
+                <option value="ru">���?�?�?����</option>
                 <option value="en">English</option>
               </select>
             </div>
           </div>
         </div>
         <div class="actions">
-          <button class="btn ghost" id="cancelSettings">Отмена</button>
-          <button class="btn primary" id="saveSettings">Сохранить</button>
+          <button class="btn ghost" id="cancelSettings">РћС‚РјРµРЅР°</button>
+          <button class="btn primary" id="saveSettings">РЎРѕС…СЂР°РЅРёС‚СЊ</button>
         </div>
       </div>
     </div>
@@ -353,3 +260,6 @@
   <script src="script.js"></script>
 </body>
 </html>
+
+
+
