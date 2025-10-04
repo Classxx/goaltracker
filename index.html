@@ -77,6 +77,8 @@
     .sheet{ width:min(760px, 96vw); max-height: 90vh; overflow:auto; background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); border-radius: 22px; box-shadow: var(--shadow); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); }
     .sheet header{ position:sticky; top:0; margin:0; padding:16px 20px; border-bottom:1px solid rgba(255,255,255,.08); background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)); }
     .sheet .content{ padding: 18px 20px 22px }
+    .sheet::-webkit-scrollbar { display: none; }
+    .sheet { scrollbar-width: none; -ms-overflow-style: none; }
 
     .row{ display:grid; grid-template-columns: 1fr 1fr; gap:12px }
     .row-3{ display:grid; grid-template-columns: repeat(3,1fr); gap:12px }
