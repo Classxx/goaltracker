@@ -99,6 +99,8 @@
     backdrop-filter: blur(10px);
   }
 
+  .toolbar{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; justify-content:center; }
+  .search{ flex:1; min-width: 220px; position:relative }
   .search input{ width:100%; padding:12px 40px 12px 14px; border-radius: 12px; border:1px solid rgba(255,255,255,.08); background: var(--card); color:var(--text); outline:none; transition: .25s border-color, .25s background; }
   .search input:focus{ border-color: rgba(122,167,255,.55); background: rgba(255,255,255,.09) }
   .search .icon{ position:absolute; right:10px; top:50%; transform:translateY(-50%); opacity:.6 }
@@ -294,7 +296,6 @@
   .sheet{ 
     width:min(800px, 96vw); 
     max-height: 90vh; 
-    margin: auto;
     overflow:auto; 
     background: var(--card-strong); 
     border:1px solid rgba(255,255,255,.2); 
@@ -346,7 +347,28 @@
     }
   }
 
-  
+  .row{ display:grid; grid-template-columns: 1fr 1fr; gap:16px }
+  .row-3{ display:grid; grid-template-columns: repeat(3,1fr); gap:16px }
+
+  label{ 
+    font-size: 14px; 
+    color: var(--text-secondary); 
+    display:block; 
+    margin: 12px 0 8px;
+    font-weight: 500;
+  }
+  input, select, textarea{ 
+    width:100%; 
+    padding:14px 16px; 
+    border-radius:16px; 
+    background: var(--card); 
+    color: var(--text); 
+    border:1px solid rgba(255,255,255,.15); 
+    outline:none; 
+    transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 15px;
+    backdrop-filter: blur(10px);
+  }
   input:focus, select:focus, textarea:focus{ 
     border-color: var(--accent); 
     background: var(--card-strong);
@@ -354,7 +376,13 @@
     transform: translateY(-1px);
   }
 
-  
+  .actions{ 
+    display:flex; 
+    gap:12px; 
+    justify-content:flex-end; 
+    margin-top:24px;
+    flex-wrap: wrap;
+  }
   .btn{ 
     padding:12px 20px; 
     border-radius:16px; 
@@ -534,7 +562,7 @@
   .achievement {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 20px;
     padding: 16px;
     background: var(--card);
     border-radius: 16px;
@@ -709,7 +737,7 @@
     transform: translateY(-50%) rotate(180deg);
   }
 
-
+/* Fix centering issues вЂ” РёСЃРїСЂР°РІР»РµРЅРЅС‹Р№ */
 .toolbar {
     display: flex;
     gap: 10px;
@@ -734,8 +762,8 @@
   
   .toolbar select {
     min-width: 160px;
-    height: auto;               
-    line-height: 1.4;          
+    height: auto;               /* РЅРµ С„РёРєСЃРёСЂСѓРµРј РІС‹СЃРѕС‚Сѓ */
+    line-height: 1.4;           /* РІС‹СЂР°РІРЅРёРІР°РЅРёРµ С‚РµРєСЃС‚Р° */
     padding-top: 12px;
     padding-bottom: 12px;
     overflow: visible;
@@ -755,7 +783,11 @@
     align-items: center;
   }
 
-  
+  .sheet {
+    width: min(800px, 96vw);
+    max-height: 90vh;
+    margin: auto;
+  }
 
   /* Form row alignment */
   .row {
@@ -825,7 +857,7 @@
     margin: 20px;
   }
 
-  .achievement-popup .achievement-icon {
+  .achievement-icon {
     font-size: 64px;
     margin-bottom: 20px;
     animation: achievementPulse 1s infinite;
@@ -912,3 +944,7 @@
     0%, 100% { opacity: 0.6; transform: scale(1); }
     50% { opacity: 1; transform: scale(1.4); }
   }
+
+
+
+
