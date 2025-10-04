@@ -737,25 +737,39 @@
     transform: translateY(-50%) rotate(180deg);
   }
 
-  /* Fix centering issues */
-  .toolbar {
+/* Fix centering issues — исправленный */
+.toolbar {
     display: flex;
     gap: 10px;
     margin-top: 12px;
     flex-wrap: wrap;
     align-items: center;
   }
-
+  
   .search {
     flex: 1;
     min-width: 220px;
     position: relative;
   }
-
-  .toolbar select {
-    min-width: 120px;
-    height: 44px;
+  
+  .toolbar .custom-select {
+    flex: 0 1 auto;
+    min-width: 160px;
+    overflow: visible;
   }
+  
+  .toolbar select {
+    min-width: 160px;
+    height: auto;               /* не фиксируем высоту */
+    line-height: 1.4;           /* выравнивание текста */
+    padding-top: 12px;
+    padding-bottom: 12px;
+    overflow: visible;
+    text-overflow: unset;
+    white-space: nowrap;
+    display: block;
+  }
+  
 
   /* Better button alignment */
   .actions {
