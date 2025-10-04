@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GoalTrack — трекинг целей</title>
+  <style>
+    /* ============ Base / Dark iOS style ============ */
+    :root{
+      color-scheme: dark; /* заставляет нативные контролы использовать тёмную палитру */
+      --bg: #0b0c10;
+      --card: rgba(255,255,255,.06);
+      --card-strong: rgba(255,255,255,.12);
+      --text: #e9eef5;
+      --muted: #a8b0bd;
+      --accent: #7aa7ff;
+      --accent-2: #46d393;
+      --danger: #ff6b6b;
+      --gold: #f4d03f;
+      --shadow: 0 10px 30px rgba(0,0,0,.45);
+      --radius: 18px;
+      --blur: 16px;
+      --gap: 14px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial, "Apple Color Emoji";
+      color:var(--text); background: radial-gradient(1200px 800px at 80% -10%, rgba(122,167,255,.18), transparent), radial-gradient(800px 800px at -10% 110%, rgba(70,211,147,.14), transparent), var(--bg);
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    }
+
+    .app{ max-width: 1100px; margin: 0 auto; padding: 24px; position:relative; }
+
+    header{
+      position: sticky; top: 0; z-index: 5; margin: -24px -24px 20px; padding: 14px 24px; backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur));
+      background: linear-gradient(180deg, rgba(11,12,16,.65), rgba(11,12,16,.3)); border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .title{ display:flex; align-items:center; gap:12px; }
+    .title h1{ font-size: 28px; margin:0; letter-spacing:.3px }
+    .title .pill{font-size:12px;color:var(--muted); padding:6px 10px; background:var(--card); border:1px solid rgba(255,255,255,.08); border-radius:999px}
+
+    .toolbar{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap }
+    .search{ flex:1; min-width: 220px; position:relative }
+    .search input{ width:100%; padding:12px 40px 12px 14px; border-radius: 12px; border:1px solid rgba(255,255,255,.08); background: var(--card); color:var(--text); outline:none; transition: .25s border-color, .25s background; }
+    .search input:focus{ border-color: rgba(122,167,255,.55); background: rgba(255,255,255,.09) }
+    .search .icon{ position:absolute; right:10px; top:50%; transform:translateY(-50%); opacity:.6 }
+
+    .grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; }
+
+    .card{ position:relative; padding:16px; border-radius: var(--radius); background: var(--card); border: 1px solid rgba(255,255,255,.08); box-shadow: var(--shadow); overflow:hidden; cursor:pointer; transition: transform .2s ease, background .2s ease, border-color .2s ease; }
+    .card:hover{ transform: translateY(-2px); background: rgba(255,255,255,.08); }
+    .card.completed{ border-color: rgba(244,208,63,.7); box-shadow: 0 0 0 1px rgba(244,208,63,.4) inset, 0 20px 50px rgba(244,208,63,.12); }
+
+    .card .type{ font-size:12px; color: var(--muted); margin-bottom:6px }
+    .card .name{ font-size:18px; margin:0 0 10px; letter-spacing:.2px }
+
+    .progress-row{ display:flex; align-items:center; gap:14px }
+
+    .ring{ --size:64px; width: var(--size); height: var(--size); border-radius: 50%; background: conic-gradient(var(--accent) var(--deg,0deg), rgba(255,255,255,.1) 0deg); display:grid; place-items:center; position:relative; }
+    .ring::after{ content:""; position:absolute; inset:6px; background: rgba(11,12,16,.85); border-radius:50%; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+    .ring span{ position:relative; font-size: 14px }
+
+    .progress-text{ display:flex; flex-direction:column; gap:6px; }
+    .progress-text .line{ height:8px; width:100%; background: rgba(255,255,255,.08); border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,.06) }
+    .progress-text .line > i{ display:block; height:100%; width: var(--w,0%); background: linear-gradient(90deg, var(--accent), #6fe3c1); border-radius:inherit; transition: width .5s ease }
+    .muted{ color:var(--muted); font-size: 12px }
+
+    .fab{ position: fixed; right: 24px; bottom: 24px; width: 60px; height:60px; border-radius: 50%; background: linear-gradient(180deg, var(--accent), #6fe3c1); color:#0b0c10; border:none; display:grid; place-items:center; box-shadow: var(--shadow); cursor:pointer; transition: transform .2s ease; z-index: 10; }
+    .fab:hover{ transform: translateY(-2px) scale(1.02) }
+    .fab svg{ width:28px; height:28px; display:block }
+
+    /* ============ Modal ============ */
+    .modal{ position: fixed; inset:0; background: rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; padding:20px; z-index:20 }
+    .modal.show{ display:flex }
+    .sheet{ width:min(760px, 96vw); max-height: 90vh; overflow:auto; background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); border-radius: 22px; box-shadow: var(--shadow); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); }
+    .sheet header{ position:sticky; top:0; margin:0; padding:16px 20px; border-bottom:1px solid rgba(255,255,255,.08); background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)); }
+    .sheet .content{ padding: 18px 20px 22px }
+
+    .row{ display:grid; grid-template-columns: 1fr 1fr; gap:12px }
+    .row-3{ display:grid; grid-template-columns: repeat(3,1fr); gap:12px }
+
+    label{ font-size: 13px; color: var(--muted); display:block; margin: 10px 0 6px }
+    input, select, textarea{ width:100%; padding:12px 12px; border-radius:12px; background: rgba(255,255,255,.08); color: var(--text); border:1px solid rgba(255,255,255,.12); outline:none; transition: .2s border-color, .2s background; }
+    input:focus, select:focus, textarea:focus{ border-color: rgba(122,167,255,.55); background: rgba(255,255,255,.12) }
+
+    .actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:16px }
+    .btn{ padding:10px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color:var(--text); cursor:pointer }
+    .btn.primary{ background: linear-gradient(180deg, var(--accent), #6fe3c1); color:#0b0c10; border:none; font-weight:600 }
+    .btn.ghost{ background: transparent }
+    .btn.danger{ background: linear-gradient(180deg, #ff7f7f, #ff6b6b); color:#0b0c10; border:none; font-weight:600 }
+
+    /* ============ Details views ============ */
+    .goal-meta{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:10px }
+    .badge{ padding:6px 10px; border-radius:999px; background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.08); font-size:12px; color:var(--muted) }
+
+    .big-congrats{ display:none; text-align:center; padding:16px; margin:12px 0; border-radius:18px; background: linear-gradient(180deg, rgba(244,208,63,.18), rgba(244,208,63,.06)); border:1px solid rgba(244,208,63,.35); box-shadow: inset 0 0 0 1px rgba(244,208,63,.18), 0 20px 60px rgba(244,208,63,.12); }
+    .big-congrats.show{ display:block; animation: pop .6s ease }
+    @keyframes pop{ from{ transform: scale(.96); opacity: .5 } to{ transform: scale(1); opacity:1 } }
+
+    /* Challenge calendar */
+    .calendar{ display:grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-top:10px }
+    .cell{ aspect-ratio:1/1; display:grid; place-items:center; font-size:12px; color:var(--muted); border-radius:10px; border:1px dashed rgba(255,255,255,.14); background: rgba(255,255,255,.04); cursor:pointer; transition:.15s ease transform, .2s ease background }
+    .cell.done{ background: linear-gradient(180deg, var(--accent-2), #7aa7ff); color:#0b0c10; border-style: solid; font-weight:700 }
+    .cell:hover{ transform: translateY(-2px) }
+
+    .empty{ opacity:.6; text-align:center; padding: 40px 0 }
+
+    /* Confetti canvas */
+    #confetti{ position: fixed; inset:0; pointer-events:none; z-index: 50 }
+
+    /* Small helper */
+    .ruble{ font-variant-numeric: tabular-nums; }
+
+    .hint{ font-size:12px; color:var(--muted) }
+
+    select, option {
+      background-color: #121317; /* тёмный фон выпадашки */
+      color: #e9eef5;            /* светлый текст */
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+  <div class="app">
+    <header>
+      <div class="title">
+        <h1>GoalTrack</h1>
+        <span class="pill">MVP • локальное хранение</span>
+      </div>
+      <div class="toolbar">
+        <div class="search">
+          <input id="search" placeholder="Поиск целей…" />
+          <span class="icon">🔎</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="list" class="grid"></section>
+      <div id="empty" class="empty" style="display:none">Пока нет целей. Нажмите «+», чтобы добавить первую цель.</div>
+    </main>
+
+    <button class="fab" id="fab" title="Добавить цель" aria-label="Добавить цель">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5a1 1 0 0 1 2 0v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H5a1 1 0 1 1 0-2h6z"/></svg>
+    </button>
+  </div>
+
+  <!-- New/Edit Modal -->
+  <div class="modal" id="modalForm">
+    <div class="sheet">
+      <header>
+        <strong id="formTitle">Новая цель</strong>
+      </header>
+      <div class="content">
+        <form id="goalForm">
+          <label>Название</label>
+          <input id="f_name" required placeholder="Например: Накопить 3 000 000 ₽" />
+
+          <div class="row">
+            <div>
+              <label>Тип цели</label>
+              <select id="f_type">
+                <option value="financial">Финансовая</option>
+                <option value="challenge">Челлендж (дни)</option>
+                <option value="counter">Счётчик (штук/км/задач)</option>
+                <option value="reading">Чтение (страницы)</option>
+                <option value="learning">Учёба (часы)</option>
+                <option value="weight">Вес (кг)</option>
+              </select>
+            </div>
+            <div>
+              <label>Быстрые шаблоны</label>
+              <select id="f_template">
+                <option value="">— Не использовать —</option>
+                <option value="tpl_money">Накопить 3 000 000 ₽ (старт 1 250 000)</option>
+                <option value="tpl_pushups">100 дней по 300 отжиманий</option>
+                <option value="tpl_read">Прочитать 1 500 стр.</option>
+                <option value="tpl_learning">Выучить Python: 100 часов</option>
+                <option value="tpl_run">Пробежать 500 км</option>
+                <option value="tpl_weight">Сбросить вес: 95 → 80 кг</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- FINANCIAL -->
+          <div class="row" data-for="financial">
+            <div>
+              <label>Целевая сумма, ₽</label>
+              <input id="f_targetAmount" type="number" min="1" step="100" placeholder="3000000" />
+            </div>
+            <div>
+              <label>Текущая сумма, ₽</label>
+              <input id="f_currentAmount" type="number" min="0" step="100" placeholder="0" />
+            </div>
+          </div>
+
+          <!-- CHALLENGE -->
+          <div class="row" data-for="challenge" style="display:none">
+            <div>
+              <label>Количество дней</label>
+              <input id="f_days" type="number" min="1" step="1" placeholder="100" />
+            </div>
+            <div>
+              <label>Уже выполнено дней</label>
+              <input id="f_daysDone" type="number" min="0" step="1" placeholder="0" />
+            </div>
+          </div>
+          <div class="row" data-for="challenge" style="display:none">
+            <div>
+              <label>Действий в день (необязательно)</label>
+              <input id="f_daily" type="number" min="1" step="1" placeholder="Например: 300" />
+            </div>
+          </div>
+
+          <!-- COUNTER -->
+          <div class="row" data-for="counter" style="display:none">
+            <div>
+              <label>Нужно выполнить (шт/км/задач)</label>
+              <input id="f_totalCount" type="number" min="1" step="1" placeholder="500" />
+            </div>
+            <div>
+              <label>Уже выполнено</label>
+              <input id="f_currentCount" type="number" min="0" step="1" placeholder="0" />
+            </div>
+          </div>
+
+          <!-- READING -->
+          <div class="row" data-for="reading" style="display:none">
+            <div>
+              <label>Всего страниц</label>
+              <input id="f_totalPages" type="number" min="1" step="1" placeholder="1500" />
+            </div>
+            <div>
+              <label>Прочитано страниц</label>
+              <input id="f_readPages" type="number" min="0" step="1" placeholder="0" />
+            </div>
+          </div>
+
+          <!-- LEARNING -->
+          <div class="row" data-for="learning" style="display:none">
+            <div>
+              <label>Цель (часов)</label>
+              <input id="f_targetHours" type="number" min="1" step="1" placeholder="100" />
+            </div>
+            <div>
+              <label>Уже изучено (минут)</label>
+              <input id="f_spentMin" type="number" min="0" step="10" placeholder="0" />
+            </div>
+          </div>
+          <div class="hint" data-for="learning" style="display:none">Совет: логируйте минуты — так удобнее; мы пересчитаем в часы автоматически.</div>
+
+          <!-- WEIGHT -->
+          <div class="row" data-for="weight" style="display:none">
+            <div>
+              <label>Вес старт, кг</label>
+              <input id="f_w_start" type="number" min="1" step="0.1" placeholder="95" />
+            </div>
+            <div>
+              <label>Целевой вес, кг</label>
+              <input id="f_w_target" type="number" min="1" step="0.1" placeholder="80" />
+            </div>
+          </div>
+          <div class="row" data-for="weight" style="display:none">
+            <div>
+              <label>Текущий вес, кг</label>
+              <input id="f_w_current" type="number" min="1" step="0.1" placeholder="95" />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="btn ghost" id="cancelForm">Отмена</button>
+            <button class="btn primary" type="submit">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details Modal -->
+  <div class="modal" id="modalDetails">
+    <div class="sheet">
+      <header>
+        <strong id="detailsTitle">Цель</strong>
+      </header>
+      <div class="content" id="detailsContent"></div>
+    </div>
+  </div>
+
+  <script>
+    // ===== Utilities =====
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+    const fmt = new Intl.NumberFormat('ru-RU');
+    const LS_KEY = 'goaltrack_goals_v2';
+
+    function uid(){ return Math.random().toString(36).slice(2) + Date.now().toString(36) }
+
+    function load(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)) || [] }catch(e){ return [] } }
+    function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state.goals)); }
+
+    function pct(n){ return Math.max(0, Math.min(100, Math.round(n))) }
+    function currency(n){ return `${fmt.format(Math.max(0, n|0))} ₽` }
+
+    // ===== Confetti =====
+    const confettiCanvas = document.getElementById('confetti');
+    const ctx = confettiCanvas.getContext('2d');
+    let confettiPieces = [];
+    function resizeCanvas(){ confettiCanvas.width = innerWidth; confettiCanvas.height = innerHeight }
+    addEventListener('resize', resizeCanvas); resizeCanvas();
+    function launchConfetti(){
+      const colors = ['#f4d03f','#7aa7ff','#46d393','#ffffff'];
+      confettiPieces = Array.from({length: 200}, () => ({
+        x: Math.random()*confettiCanvas.width,
+        y: -20 - Math.random()*innerHeight*.3,
+        r: 4+Math.random()*6,
+        c: colors[Math.floor(Math.random()*colors.length)],
+        vy: 2+Math.random()*3,
+        vx: -2+Math.random()*4,
+        rot: Math.random()*Math.PI,
+        vr: -0.1 + Math.random()*0.2,
+        shape: Math.random()>.5?'rect':'circle',
+        life: 160+Math.random()*80
+      }));
+      let frame = 0;
+      function draw(){
+        ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
+        confettiPieces.forEach(p=>{
+          p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.vy*=0.995; p.vx*=0.995; p.life--;
+          ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.fillStyle=p.c;
+          if(p.shape==='rect'){ ctx.fillRect(-p.r, -p.r, p.r*2, p.r*2*0.6) } else { ctx.beginPath(); ctx.arc(0,0,p.r,0,Math.PI*2); ctx.fill(); }
+          ctx.restore();
+        });
+        confettiPieces = confettiPieces.filter(p=>p.life>0 && p.y<confettiCanvas.height+20);
+        frame++;
+        if(frame<300) requestAnimationFrame(draw); else ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
+      }
+      draw();
+    }
+
+    // ===== State =====
+    const state = { goals: load(), filter: '' }
+
+    // ===== Render list =====
+    const list = document.getElementById('list');
+    const empty = document.getElementById('empty');
+
+    function computeProgress(g){
+      switch(g.type){
+        case 'financial': return pct((g.currentAmount / Math.max(1, g.targetAmount))*100);
+        case 'challenge': return pct((g.completedDays.length / Math.max(1, g.totalDays))*100);
+        case 'counter':   return pct((g.currentCount / Math.max(1, g.totalCount))*100);
+        case 'reading':   return pct((g.readPages / Math.max(1, g.totalPages))*100);
+        case 'learning':  return pct(((g.spentMin/60) / Math.max(1, g.targetHours))*100);
+        case 'weight': {
+          const loseTotal = Math.max(0.0001, g.w_start - g.w_target);
+          const loseNow = Math.max(0, g.w_start - g.w_current);
+          return pct((loseNow/loseTotal)*100);
+        }
+        default: return 0;
+      }
+    }
+
+    function card(g){
+      const percent = computeProgress(g);
+      const deg = (percent/100)*360;
+      let topText = '';
+      let typeText = '';
+      if(g.type==='financial'){ topText = `${currency(g.currentAmount)} / ${currency(g.targetAmount)}`; typeText = 'Финансовая цель'; }
+      if(g.type==='challenge'){ topText = `${g.completedDays.length} / ${g.totalDays} дней`; typeText = g.actionsPerDay?`Челлендж · ${g.actionsPerDay}/день`:'Челлендж'; }
+      if(g.type==='counter'){ topText = `${g.currentCount} / ${g.totalCount}`; typeText = 'Счётчик'; }
+      if(g.type==='reading'){ topText = `${g.readPages} / ${g.totalPages} стр.`; typeText = 'Чтение'; }
+      if(g.type==='learning'){ topText = `${(g.spentMin/60).toFixed(1)} / ${g.targetHours} ч`; typeText = 'Учёба'; }
+      if(g.type==='weight'){ topText = `${g.w_current} → ${g.w_target} кг (было ${g.w_start})`; typeText = 'Вес'; }
+      const done = percent>=100;
+      const el = document.createElement('article');
+      el.className = 'card'+(done?' completed':'');
+      el.innerHTML = `
+        <div class="type">${typeText}</div>
+        <h3 class="name">${g.name}</h3>
+        <div class="progress-row">
+          <div class="ring" style="--deg:${deg}deg"><span>${percent}%</span></div>
+          <div class="progress-text" style="flex:1">
+            <div class="line"><i style="--w:${percent}%"></i></div>
+            <div class="muted">${topText}</div>
+          </div>
+        </div>`;
+      el.addEventListener('click', ()=>openDetails(g.id));
+      return el;
+    }
+
+    function render(){
+      list.innerHTML = '';
+      const filtered = state.goals.filter(g => g.name.toLowerCase().includes(state.filter.toLowerCase()));
+      empty.style.display = filtered.length===0 ? 'block':'none';
+      filtered.sort((a,b)=> (computeProgress(b)-computeProgress(a)) || (b.createdAt - a.createdAt));
+      filtered.forEach(g => list.appendChild(card(g)));
+    }
+
+    // ===== Modals helpers =====
+    function showModal(id){ $(id).classList.add('show') }
+    function hideModal(id){ $(id).classList.remove('show') }
+
+    // ===== Create goal =====
+    const fab = document.getElementById('fab');
+    const modalForm = document.getElementById('modalForm');
+    const goalForm = document.getElementById('goalForm');
+
+    function resetForm(){
+      goalForm.reset();
+      $('#f_type').value = 'financial';
+      $('#f_template').value = '';
+      updateFormVisibility();
+      $('#formTitle').textContent = 'Новая цель';
+    }
+
+    function updateFormVisibility(){
+      const t = $('#f_type').value;
+      $$('[data-for]').forEach(el=> el.style.display = (el.getAttribute('data-for')===t? (el.tagName==='DIV'?'grid':'block') : 'none'));
+    }
+    $('#f_type').addEventListener('change', updateFormVisibility);
+
+    // Templates
+    $('#f_template').addEventListener('change', (e)=>{
+      const v = e.target.value;
+      if(!v) return;
+      if(v==='tpl_money'){
+        $('#f_type').value='financial'; updateFormVisibility();
+        $('#f_name').value='Накопить 3 000 000 ₽';
+        $('#f_targetAmount').value=3000000; $('#f_currentAmount').value=1250000;
+      }
+      if(v==='tpl_pushups'){
+        $('#f_type').value='challenge'; updateFormVisibility();
+        $('#f_name').value='100 дней по 300 отжиманий';
+        $('#f_days').value=100; $('#f_daysDone').value=0; $('#f_daily').value=300;
+      }
+      if(v==='tpl_read'){
+        $('#f_type').value='reading'; updateFormVisibility();
+        $('#f_name').value='Прочитать 1 500 страниц';
+        $('#f_totalPages').value=1500; $('#f_readPages').value=0;
+      }
+      if(v==='tpl_learning'){
+        $('#f_type').value='learning'; updateFormVisibility();
+        $('#f_name').value='Выучить Python: 100 часов';
+        $('#f_targetHours').value=100; $('#f_spentMin').value=0;
+      }
+      if(v==='tpl_run'){
+        $('#f_type').value='counter'; updateFormVisibility();
+        $('#f_name').value='Пробежать 500 км';
+        $('#f_totalCount').value=500; $('#f_currentCount').value=0;
+      }
+      if(v==='tpl_weight'){
+        $('#f_type').value='weight'; updateFormVisibility();
+        $('#f_name').value='Сбросить вес к лету';
+        $('#f_w_start').value=95; $('#f_w_target').value=80; $('#f_w_current').value=95;
+      }
+    });
+
+    fab.addEventListener('click', ()=>{ resetForm(); showModal('#modalForm') });
+    $('#cancelForm').addEventListener('click', ()=> hideModal('#modalForm'));
+
+    goalForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const type = $('#f_type').value;
+      const name = $('#f_name').value.trim();
+      if(!name) return;
+      let g;
+      if(type==='financial'){
+        const targetAmount = parseInt($('#f_targetAmount').value||'0',10);
+        const currentAmount = parseInt($('#f_currentAmount').value||'0',10);
+        g = { id: uid(), type, name, targetAmount, currentAmount, createdAt: Date.now(), completedAt: null };
+      }
+      if(type==='challenge'){
+        const totalDays = parseInt($('#f_days').value||'1',10);
+        const done = Math.min(totalDays, parseInt($('#f_daysDone').value||'0',10));
+        const actionsPerDay = parseInt($('#f_daily').value||'0',10) || null;
+        const completedDays = Array.from({length: done}, (_,i)=> i+1);
+        g = { id: uid(), type, name, totalDays, completedDays, actionsPerDay, createdAt: Date.now(), completedAt: null };
+      }
+      if(type==='counter'){
+        const totalCount = parseInt($('#f_totalCount').value||'1',10);
+        const currentCount = Math.min(totalCount, parseInt($('#f_currentCount').value||'0',10));
+        g = { id: uid(), type, name, totalCount, currentCount, createdAt: Date.now(), completedAt: null };
+      }
+      if(type==='reading'){
+        const totalPages = parseInt($('#f_totalPages').value||'1',10);
+        const readPages = Math.min(totalPages, parseInt($('#f_readPages').value||'0',10));
+        g = { id: uid(), type, name, totalPages, readPages, createdAt: Date.now(), completedAt: null };
+      }
+      if(type==='learning'){
+        const targetHours = parseInt($('#f_targetHours').value||'1',10);
+        const spentMin = parseInt($('#f_spentMin').value||'0',10);
+        g = { id: uid(), type, name, targetHours, spentMin, createdAt: Date.now(), completedAt: null };
+      }
+      if(type==='weight'){
+        const w_start = parseFloat($('#f_w_start').value||'0');
+        const w_target = parseFloat($('#f_w_target').value||'0');
+        const w_current = parseFloat($('#f_w_current').value||w_start);
+        g = { id: uid(), type, name, w_start, w_target, w_current, createdAt: Date.now(), completedAt: null };
+      }
+
+      state.goals.push(g);
+      save(); hideModal('#modalForm'); render();
+    });
+
+    // ===== Details / Edit =====
+    const modalDetails = document.getElementById('modalDetails');
+    const detailsContent = document.getElementById('detailsContent');
+
+    function openDetails(id){
+      const g = state.goals.find(x=>x.id===id); if(!g) return;
+      $('#detailsTitle').textContent = g.name;
+
+      const percent = computeProgress(g);
+
+      // Helper to finalize
+      function finalize(){ if(computeProgress(g)>=100 && !g.completedAt){ g.completedAt = Date.now(); celebrate(); } save(); openDetails(g.id); render(); }
+
+      if(g.type==='financial'){
+        detailsContent.innerHTML = `
+          <div class="goal-meta">
+            <span class="badge">Финансовая цель</span>
+            <span class="badge">Прогресс: <strong style="color:#fff">${percent}%</strong></span>
+          </div>
+          <div class="progress-row" style="margin:10px 0 6px">
+            <div class="ring" style="--deg:${(percent/100)*360}deg"><span>${percent}%</span></div>
+            <div class="progress-text" style="flex:1">
+              <div class="line"><i style="--w:${percent}%"></i></div>
+              <div class="muted ruble">${currency(g.currentAmount)} / ${currency(g.targetAmount)}</div>
+            </div>
+          </div>
+
+          <label>Обновить текущую сумму (₽)</label>
+          <input id="inpMoney" type="number" min="0" step="100" value="${g.currentAmount}" />
+
+          <div class="actions">
+            <button class="btn danger" id="btnDelete">Удалить</button>
+            <button class="btn" id="btnSaveMoney">Сохранить</button>
+            <button class="btn primary" id="btnAddMoney">+ Добавить 1 000 ₽</button>
+          </div>
+
+          <div id="congrats" class="big-congrats">🎉 Цель достигнута! Великолепно!</div>`;
+
+        $('#btnSaveMoney').onclick = ()=>{ g.currentAmount = Math.max(0, parseInt($('#inpMoney').value||'0',10)); finalize(); };
+        $('#btnAddMoney').onclick = ()=>{ g.currentAmount = (g.currentAmount|0) + 1000; finalize(); };
+        $('#btnDelete').onclick = ()=>{ if(confirm('Удалить цель?')){ state.goals = state.goals.filter(x=>x.id!==g.id); save(); hideModal('#modalDetails'); render(); } };
+        if(percent>=100){ $('#congrats').classList.add('show'); }
+        showModal('#modalDetails'); return;
+      }
+
+      if(g.type==='challenge'){
+        const cells = Array.from({length: g.totalDays}, (_,i)=>{
+          const day = i+1; const done = g.completedDays.includes(day);
+          return `<div class="cell ${done?'done':''}" data-day="${day}">${day}</div>`;
+        }).join('');
+        detailsContent.innerHTML = `
+          <div class="goal-meta">
+            <span class="badge">Челлендж${g.actionsPerDay?` • ${g.actionsPerDay}/день`:''}</span>
+            <span class="badge">Прогресс: <strong style="color:#fff">${percent}%</strong></span>
+          </div>
+          <div class="progress-row" style="margin:10px 0 6px">
+            <div class="ring" style="--deg:${(percent/100)*360}deg"><span>${percent}%</span></div>
+            <div class="progress-text" style="flex:1">
+              <div class="line"><i style="--w:${percent}%"></i></div>
+              <div class="muted">${g.completedDays.length} из ${g.totalDays} дней выполнено</div>
+            </div>
+          </div>
+          <label>Отмечайте выполненные дни</label>
+          <div class="calendar" id="calendar">${cells}</div>
+          <div class="actions">
+            <button class="btn danger" id="btnDelete">Удалить</button>
+            <button class="btn" id="btnReset">Сбросить прогресс</button>
+          </div>
+          <div id="congrats" class="big-congrats">🎉 Челлендж завершен! Мощно!</div>`;
+
+        $('#calendar').onclick = (e)=>{
+          const cell = e.target.closest('.cell'); if(!cell) return;
+          const d = parseInt(cell.dataset.day,10);
+          const idx = g.completedDays.indexOf(d);
+          if(idx>-1){ g.completedDays.splice(idx,1) } else { g.completedDays.push(d) }
+          finalize();
+        };
+        $('#btnReset').onclick = ()=>{ if(confirm('Сбросить прогресс?')){ g.completedDays = []; g.completedAt=null; finalize(); } };
+        $('#btnDelete').onclick = ()=>{ if(confirm('Удалить цель?')){ state.goals = state.goals.filter(x=>x.id!==g.id); save(); hideModal('#modalDetails'); render(); } };
+        if(percent>=100){ $('#congrats').classList.add('show'); }
+        showModal('#modalDetails'); return;
+      }
+
+      if(g.type==='counter'){
+        detailsContent.innerHTML = `
+          <div class="goal-meta">
+            <span class="badge">Счётчик</span>
+            <span class="badge">Прогресс: <strong style="color:#fff">${percent}%</strong></span>
+          </div>
+          <div class="progress-row" style="margin:10px 0 6px">
+            <div class="ring" style="--deg:${(percent/100)*360}deg"><span>${percent}%</span></div>
+            <div class="progress-text" style="flex:1">
+              <div class="line"><i style="--w:${percent}%"></i></div>
+              <div class="muted">${g.currentCount} / ${g.totalCount}</div>
+            </div>
+          </div>
+          <label>Текущее значение</label>
+          <input id="inpCnt" type="number" min="0" step="1" value="${g.currentCount}" />
+          <div class="actions">
+            <button class="btn danger" id="btnDelete">Удалить</button>
+            <button class="btn" id="btnSaveCnt">Сохранить</button>
+            <button class="btn primary" id="btnIncCnt">+ Добавить 1</button>
+          </div>
+          <div id="congrats" class="big-congrats">🎉 Цель достигнута!</div>`;
+        $('#btnSaveCnt').onclick = ()=>{ g.currentCount = Math.min(g.totalCount, Math.max(0, parseInt($('#inpCnt').value||'0',10))); finalize(); };
+        $('#btnIncCnt').onclick = ()=>{ g.currentCount = Math.min(g.totalCount, (g.currentCount|0) + 1); finalize(); };
+        $('#btnDelete').onclick = ()=>{ if(confirm('Удалить цель?')){ state.goals = state.goals.filter(x=>x.id!==g.id); save(); hideModal('#modalDetails'); render(); } };
+        if(percent>=100){ $('#congrats').classList.add('show'); }
+        showModal('#modalDetails'); return;
+      }
+
+      if(g.type==='reading'){
+        detailsContent.innerHTML = `
+          <div class="goal-meta">
+            <span class="badge">Чтение</span>
+            <span class="badge">Прогресс: <strong style="color:#fff">${percent}%</strong></span>
+          </div>
+          <div class="progress-row" style="margin:10px 0 6px">
+            <div class="ring" style="--deg:${(percent/100)*360}deg"><span>${percent}%</span></div>
+            <div class="progress-text" style="flex:1">
+              <div class="line"><i style="--w:${percent}%"></i></div>
+              <div class="muted">${g.readPages} / ${g.totalPages} стр.</div>
+            </div>
+          </div>
+          <label>Прочитано страниц</label>
+          <input id="inpRead" type="number" min="0" step="1" value="${g.readPages}" />
+          <div class="actions">
+            <button class="btn danger" id="btnDelete">Удалить</button>
+            <button class="btn" id="btnSaveRead">Сохранить</button>
+            <button class="btn primary" id="btnPlus10">+10 стр.</button>
+          </div>
+          <div id="congrats" class="big-congrats">🎉 Прочитано всё! Браво!</div>`;
+        $('#btnSaveRead').onclick = ()=>{ g.readPages = Math.min(g.totalPages, Math.max(0, parseInt($('#inpRead').value||'0',10))); finalize(); };
+        $('#btnPlus10').onclick = ()=>{ g.readPages = Math.min(g.totalPages, (g.readPages|0) + 10); finalize(); };
+        $('#btnDelete').onclick = ()=>{ if(confirm('Удалить цель?')){ state.goals = state.goals.filter(x=>x.id!==g.id); save(); hideModal('#modalDetails'); render(); } };
+        if(percent>=100){ $('#congrats').classList.add('show'); }
+        showModal('#modalDetails'); return;
+      }
+
+      if(g.type==='learning'){
+        detailsContent.innerHTML = `
+          <div class="goal-meta">
+            <span class="badge">Учёба</span>
+            <span class="badge">Прогресс: <strong style="color:#fff">${percent}%</strong></span>
+          </div>
+          <div class="progress-row" style="margin:10px 0 6px">
+            <div class="ring" style="--deg:${(percent/100)*360}deg"><span>${percent}%</span></div>
+            <div class="progress-text" style="flex:1">
+              <div class="line"><i style="--w:${percent}%"></i></div>
+              <div class="muted">${(g.spentMin/60).toFixed(1)} / ${g.targetHours} ч</div>
+            </div>
+          </div>
+          <label>Добавить (минут)</label>
+          <input id="inpMin" type="number" min="0" step="10" value="30" />
+          <div class="actions">
+            <button class="btn danger" id="btnDelete">Удалить</button>
+            <button class="btn" id="btnAddMin">Добавить</button>
+          </div>
+          <div id="congrats" class="big-congrats">🎉 Учебная цель достигнута!</div>`;
+        $('#btnAddMin').onclick = ()=>{ g.spentMin = Math.min(g.targetHours*60, (g.spentMin|0) + Math.max(0, parseInt($('#inpMin').value||'0',10))); finalize(); };
+        $('#btnDelete').onclick = ()=>{ if(confirm('Удалить цель?')){ state.goals = state.goals.filter(x=>x.id!==g.id); save(); hideModal('#modalDetails'); render(); } };
+        if(percent>=100){ $('#congrats').classList.add('show'); }
+        showModal('#modalDetails'); return;
+      }
+
+      if(g.type==='weight'){
+        detailsContent.innerHTML = `
+          <div class="goal-meta">
+            <span class="badge">Вес</span>
+            <span class="badge">Прогресс: <strong style="color:#fff">${percent}%</strong></span>
+          </div>
+          <div class="progress-row" style="margin:10px 0 6px">
+            <div class="ring" style="--deg:${(percent/100)*360}deg"><span>${percent}%</span></div>
+            <div class="progress-text" style="flex:1">
+              <div class="line"><i style="--w:${percent}%"></i></div>
+              <div class="muted">${g.w_current} → ${g.w_target} кг (было ${g.w_start})</div>
+            </div>
+          </div>
+          <label>Текущий вес (кг)</label>
+          <input id="inpW" type="number" min="1" step="0.1" value="${g.w_current}" />
+          <div class="actions">
+            <button class="btn danger" id="btnDelete">Удалить</button>
+            <button class="btn" id="btnSaveW">Сохранить</button>
+          </div>
+          <div id="congrats" class="big-congrats">🎉 Цель по весу достигнута!</div>`;
+        $('#btnSaveW').onclick = ()=>{ g.w_current = parseFloat($('#inpW').value||g.w_current); finalize(); };
+        $('#btnDelete').onclick = ()=>{ if(confirm('Удалить цель?')){ state.goals = state.goals.filter(x=>x.id!==g.id); save(); hideModal('#modalDetails'); render(); } };
+        if(percent>=100){ $('#congrats').classList.add('show'); }
+        showModal('#modalDetails'); return;
+      }
+    }
+
+    // Celebrate
+    function celebrate(){
+      launchConfetti();
+      if(navigator.vibrate) try{ navigator.vibrate([30, 30, 30]); }catch(err){}
+    }
+
+    // Close on backdrop click
+    [modalForm, modalDetails].forEach(m=> m.addEventListener('click', (e)=>{ if(e.target===m) hideModal('#'+m.id) }));
+
+    // Search
+    $('#search').addEventListener('input', (e)=>{ state.filter = e.target.value; render(); });
+
+    // Initial render
+    render();
+  </script>
+</body>
+</html>
