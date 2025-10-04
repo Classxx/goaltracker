@@ -1,4 +1,4 @@
-:root{
+﻿:root{
     color-scheme: dark;
     --bg: #0a0b0f;
     --bg-secondary: #111218;
@@ -99,7 +99,7 @@
     backdrop-filter: blur(10px);
   }
 
-  .toolbar{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap }
+  .toolbar{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; justify-content:center; }
   .search{ flex:1; min-width: 220px; position:relative }
   .search input{ width:100%; padding:12px 40px 12px 14px; border-radius: 12px; border:1px solid rgba(255,255,255,.08); background: var(--card); color:var(--text); outline:none; transition: .25s border-color, .25s background; }
   .search input:focus{ border-color: rgba(122,167,255,.55); background: rgba(255,255,255,.09) }
@@ -278,7 +278,7 @@
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,.7);
-    display: none; /* <-- важно! */
+    display: none; /* <-- РІР°Р¶РЅРѕ! */
     align-items: center;
     justify-content: center;
     padding: 20px;
@@ -562,7 +562,7 @@
   .achievement {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 20px;
     padding: 16px;
     background: var(--card);
     border-radius: 16px;
@@ -718,7 +718,7 @@
   }
 
   .custom-select::after {
-    content: '▼';
+    content: 'в–ј';
     position: absolute;
     right: 16px;
     top: 50%;
@@ -737,13 +737,15 @@
     transform: translateY(-50%) rotate(180deg);
   }
 
-/* Fix centering issues — исправленный */
+/* Fix centering issues вЂ” РёСЃРїСЂР°РІР»РµРЅРЅС‹Р№ */
 .toolbar {
     display: flex;
     gap: 10px;
     margin-top: 12px;
     flex-wrap: wrap;
+    justify-content: center;
     align-items: center;
+    align-content: center;
   }
   
   .search {
@@ -760,8 +762,8 @@
   
   .toolbar select {
     min-width: 160px;
-    height: auto;               /* не фиксируем высоту */
-    line-height: 1.4;           /* выравнивание текста */
+    height: auto;               /* РЅРµ С„РёРєСЃРёСЂСѓРµРј РІС‹СЃРѕС‚Сѓ */
+    line-height: 1.4;           /* РІС‹СЂР°РІРЅРёРІР°РЅРёРµ С‚РµРєСЃС‚Р° */
     padding-top: 12px;
     padding-bottom: 12px;
     overflow: visible;
@@ -801,6 +803,7 @@
     gap: 16px;
     align-items: end;
   }
+  
 
   /* Label alignment */
   label {
@@ -909,7 +912,7 @@
     to { opacity: 0; }
   }
 
-  /* --- Центровка мета-информации в карточке --- */
+  /* --- Р¦РµРЅС‚СЂРѕРІРєР° РјРµС‚Р°-РёРЅС„РѕСЂРјР°С†РёРё РІ РєР°СЂС‚РѕС‡РєРµ --- */
   .card .meta {
     display: flex;
     align-items: center;
@@ -941,4 +944,7 @@
     0%, 100% { opacity: 0.6; transform: scale(1); }
     50% { opacity: 1; transform: scale(1.4); }
   }
-  
+
+
+
+
