@@ -7,6 +7,7 @@ const LS_KEY = 'goaltrack_goals_v3';
 const ACHIEVEMENTS_KEY = 'goaltrack_achievements_v1';
 const STATS_KEY = 'goaltrack_stats_v1';
 const SETTINGS_KEY = 'goaltrack_settings_v1';
+
 function uid(){ return Math.random().toString(36).slice(2) + Date.now().toString(36) }
 function load(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)) || [] }catch(e){ return [] } }
 function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state.goals)); }
@@ -21,6 +22,7 @@ function loadSettings(){ try{ return JSON.parse(localStorage.getItem(SETTINGS_KE
 function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(state.settings)); }
 function pct(n){ return Math.max(0, Math.min(100, Math.round(n))) }
 function currency(n){ return `${fmt.format(Math.max(0, n|0))} ₽` }
+
 // ===== Animated Background Particles =====
 function createParticles() {
   const container = document.getElementById('bgParticles');
@@ -35,6 +37,7 @@ function createParticles() {
     container.appendChild(particle);
   }
 }
+
 // ===== Enhanced Confetti =====
 const confettiCanvas = document.getElementById('confetti');
 const ctx = confettiCanvas ? confettiCanvas.getContext('2d') : null;
@@ -70,6 +73,7 @@ function launchConfetti(){
   }
   draw();
 }
+
 // ===== Enhanced State =====
 const state = { 
     goals: Array.isArray(load()) ? load() : [],
@@ -78,6 +82,7 @@ const state = {
     stats: loadStats(),
     settings: loadSettings()
 }
+
 // ===== Translation System =====
 const translations = {
   ru: {
@@ -220,17 +225,87 @@ const translations = {
     settings: 'Settings',
     emptyState: 'No goals yet. Click "+" to add your first goal.',
     motivationalQuotes: [
-      "The journey of a thousand miles begins with one step. — Lao Tzu",
-      "Success is the sum of small efforts repeated day in and day out. — Robert Collier",
+      "It does not matter how slowly you go as long as you do not stop. — Confucius",
+      "Anyone who has never made a mistake has never tried anything new. — Albert Einstein",
+      "You can never cross the ocean until you have the courage to lose sight of the shore. — Christopher Columbus",
+      "The secret of getting ahead is getting started. — Mark Twain",
+      "Do not be afraid of going slowly; be afraid only of standing still. — Chinese proverb",
+      "Whatever you can do or dream you can, begin it. Boldness has genius, power, and magic in it. — Johann Wolfgang von Goethe",
+      "Failure is simply the opportunity to begin again, this time more intelligently. — Henry Ford",
+      "If you want to live your life — stop waiting for approval. — Will Smith",
+      "He who says it cannot be done should not interrupt the one who is doing it. — Chinese proverb",
+      "The secret of getting ahead is getting started. — Mark Twain",
+      "Success is going from failure to failure without losing enthusiasm. — Winston Churchill",
+      "Become a failure faster and more often — that’s the path to innovation. — Jason Fried",
+      "Necessity is the mother of invention. — Plato",
+      "Your work is going to fill a large part of your life, and the only way to be truly satisfied is to do what you believe is great work. — Steve Jobs",
       "The future belongs to those who believe in the beauty of their dreams. — Eleanor Roosevelt",
-      "The only way to do great work is to love what you do. — Steve Jobs",
-      "Don't be afraid to give up the good to go for the great. — John Rockefeller",
-      "Your time is limited, don't waste it living someone else's life. — Steve Jobs",
-      "Invest in yourself. Your career is the engine of your wealth. — Paul Clancy",
-      "Discipline is the bridge between goals and accomplishment. — Jim Rohn",
-      "The best time to plant a tree was 20 years ago. The next best time is now. — Chinese Proverb",
-      "Success is not the key to happiness. Happiness is the key to success. — Albert Schweitzer"
+      "We become what we think about most of the time. — Ralph Waldo Emerson",
+      "First they ignore you, then they laugh at you, then they fight you, then you win. — Mahatma Gandhi",
+      "Don’t limit yourself. Many people limit themselves to what they think they can do. — Mary Kay Ash",
+      "If you set a goal that you can’t reach yet, it will motivate you to grow. — Gerry Locker",
+      "Ask not what your country can do for you – ask what you can do for your country. — John F. Kennedy",
+      "The greatest pleasure in life is doing what people say you cannot do. — Walter Bagehot",
+      "Don’t waste your time on explanations; people only hear what they want to hear. — Paulo Coelho",
+      "It’s not whether you get knocked down; it’s whether you get up. — Vince Lombardi",
+      "That which does not kill us makes us stronger. — Friedrich Nietzsche",
+      "Live as if you were to die tomorrow. Learn as if you were to live forever. — Mahatma Gandhi",
+      "Always be a first-rate version of yourself, instead of a second-rate version of somebody else. — Judy Garland",
+      "Think globally, act locally. — René Dubos",
+      "Only those who risk going too far can possibly find out how far one can go. — T. S. Eliot",
+      "Failure is not fatal. Failure is refusing to try again. — John Wooden",
+      "All our dreams can come true if we have the courage to pursue them. — Walt Disney",
+      "Invest in yourself. No one else will do it for you. — Rose La Roche",
+      "When you want something, all the universe conspires in helping you to achieve it. — Paulo Coelho",
+      "Never put off till tomorrow what you can do today. — Benjamin Franklin",
+      "Your time is limited, so don’t waste it living someone else’s life. — Steve Jobs",
+      "Happiness is not a goal; it’s a by-product. — Eleanor Roosevelt",
+      "Every accomplishment starts with the decision to try. — Gail Devers",
+      "Be the change that you wish to see in the world. — Mahatma Gandhi",
+      "The darkest hour is just before the dawn. — Thomas Fuller",
+      "The greatest glory in living lies not in never falling, but in rising every time we fall. — Nelson Mandela",
+      "Don’t be afraid of perfection – you’ll never reach it. — Salvador Dalí",
+      "You can’t do everything at once, but you can do the next thing. — Paulo Coelho",
+      "A leader is one who knows the way, goes the way, and shows the way. — John C. Maxwell",
+      "True success is when you live according to your own values. — Oprah Winfrey",
+      "Work like you don’t need the money. Love like you’ve never been hurt. Dance like nobody’s watching. — Mark Twain",
+      "Don’t wait for the perfect moment. Take the moment and make it perfect. — Zig Ziglar",
+      "The secret of change is to focus all your energy not on fighting the old, but on building the new. — Socrates",
+      "When the goal is great, flaws are invisible. — William Shakespeare",
+      "Knowing life is short – live today. — Seneca",
+      "The greatest wealth is to live according to your own terms. — Clifford Stoll",
+      "To achieve anything, you must believe in the impossible. — Nick Vujicic",
+      "It’s never too late to be what you might have been. — George Eliot",
+      "Difficulties strengthen the mind, as labor does the body. — Samuel Smiles",
+      "Failure is simply experience. — Henry Ford",
+      "True manhood is conquering oneself. — Friedrich Schiller",
+      "Strength lies in consistency. — Marcus Aurelius",
+      "Our deepest fear is not that we are inadequate, but that we are powerful beyond measure. — Marianne Williamson",
+      "On the way to your goal there will always be obstacles — they test your determination. — Paulo Coelho",
+      "Believe you can and you’re halfway there. — Theodore Roosevelt",
+      "We cannot direct the wind, but we can adjust the sails. — Dolly Parton",
+      "Judge yourself by what you do, not by what you intend to do. — Leonardo da Vinci",
+      "When you start doing what you can, you’ll be amazed at what you can achieve. — Louise Hay",
+      "Limitations exist only in the air of your mind. — Napoleon Hill",
+      "The world is not made for the weak. — Simone de Beauvoir",
+      "Where there is much love, there is much strength. — Mahatma Gandhi",
+      "Slow down and you’ll see — the best part begins quietly. — Ralph Waldo Emerson",
+      "To rise higher, you must let go of the ballast. — Richard Branson",
+      "Every day is a new opportunity. — Carl Sandburg",
+      "Failure is the first step to success if you learn from it. — William Delbert Gann",
+      "If you want to achieve something big, start small. — Lao Tzu",
+      "Do it now so you won’t regret it later. — Lou Holtz",
+      "You can’t achieve success if you’re not willing to fail. — Vince Lombardi",
+      "Character is built through adversity. — John Maxwell",
+      "Do not diminish your own path — it’s yours alone. — Friedrich Nietzsche",
+      "Action is the bridge between dreams and results. — Will Smith",
+      "Believe in yourself even if no one else does. — Ronald Reagan",
+      "The harder the battle, the sweeter the victory. — Herman Melville",
+      "To accomplish great things, we must begin with small ones. — Antoine de Saint-Exupéry",
+      "He who wishes to travel far will find a way. — Publilius Syrus",
+      "Love work, and it will love you back. — Seneca"
     ]
+
   }
 };
 function t(key) {
@@ -1240,8 +1315,8 @@ function showMotivationalQuote() {
   }
 }
 // Initialize notifications
-requestNotificationPermission();
-scheduleReminders();
+//requestNotificationPermission();
+//scheduleReminders();
 // Initial render
 render();
 updateStats();
