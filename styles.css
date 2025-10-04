@@ -39,6 +39,14 @@
       var(--bg);
     -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
     overflow-x: hidden;
+    overscroll-behavior-y: contain;
+    overscroll-behavior-x: none;
+    touch-action: pan-y;
+    -ms-touch-action: manipulation;
+    -webkit-text-size-adjust: 100%;
+  }
+  body.modal-open{
+    overflow: hidden;
   }
 
   /* Animated background particles */
@@ -278,7 +286,7 @@
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,.7);
-    display: none; /* <-- РІР°Р¶РЅРѕ! */
+    display: none; /* <-- Р Р†Р В°Р В¶Р Р…Р С•! */
     align-items: center;
     justify-content: center;
     padding: 20px;
@@ -366,7 +374,7 @@
     border:1px solid rgba(255,255,255,.15); 
     outline:none; 
     transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: 15px;
+    font-size: 16px;
     backdrop-filter: blur(10px);
   }
   input:focus, select:focus, textarea:focus{ 
@@ -487,8 +495,10 @@
   /* Enhanced Challenge calendar */
   .calendar{ 
     display:grid; 
-    grid-template-columns: repeat(10, 1fr); 
-    gap: 8px; 
+    grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
+    gap: 8px;
+    max-height: 420px;
+    overflow-y: auto;
     margin-top:16px;
     padding: 16px;
     background: var(--card);
@@ -665,7 +675,6 @@
   .card .card-meta {
     display: flex;
     align-items: center;
-    gap: 8px;
   }
 
   /* Light Theme */
@@ -703,7 +712,7 @@
     border-radius: 16px;
     padding: 14px 40px 14px 16px;
     color: var(--text);
-    font-size: 15px;
+    font-size: 16px;
     cursor: pointer;
     transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
     backdrop-filter: blur(10px);
@@ -718,7 +727,7 @@
   }
 
   .custom-select::after {
-    content: '▼';
+    content: 'в–ј';
     position: absolute;
     right: 16px;
     top: 50%;
@@ -737,7 +746,7 @@
     transform: translateY(-50%) rotate(180deg);
   }
 
-/* Fix centering issues вЂ” РёСЃРїСЂР°РІР»РµРЅРЅС‹Р№ */
+/* Fix centering issues РІР‚вЂќ Р С‘РЎРѓР С—РЎР‚Р В°Р Р†Р В»Р ВµР Р…Р Р…РЎвЂ№Р в„– */
 .toolbar {
     display: flex;
     gap: 10px;
@@ -762,8 +771,8 @@
   
   .toolbar select {
     min-width: 160px;
-    height: auto;               /* РЅРµ С„РёРєСЃРёСЂСѓРµРј РІС‹СЃРѕС‚Сѓ */
-    line-height: 1.4;           /* РІС‹СЂР°РІРЅРёРІР°РЅРёРµ С‚РµРєСЃС‚Р° */
+    height: auto;               /* Р Р…Р Вµ РЎвЂћР С‘Р С”РЎРѓР С‘РЎР‚РЎС“Р ВµР С Р Р†РЎвЂ№РЎРѓР С•РЎвЂљРЎС“ */
+    line-height: 1.4;           /* Р Р†РЎвЂ№РЎР‚Р В°Р Р†Р Р…Р С‘Р Р†Р В°Р Р…Р С‘Р Вµ РЎвЂљР ВµР С”РЎРѓРЎвЂљР В° */
     padding-top: 12px;
     padding-bottom: 12px;
     overflow: visible;
@@ -825,7 +834,7 @@
     border: 1px solid rgba(255,255,255,.15);
     outline: none;
     transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: 15px;
+    font-size: 16px;
     backdrop-filter: blur(10px);
     box-sizing: border-box;
   }
@@ -912,11 +921,10 @@
     to { opacity: 0; }
   }
 
-  /* --- Р¦РµРЅС‚СЂРѕРІРєР° РјРµС‚Р°-РёРЅС„РѕСЂРјР°С†РёРё РІ РєР°СЂС‚РѕС‡РєРµ --- */
+  /* --- Р В¦Р ВµР Р…РЎвЂљРЎР‚Р С•Р Р†Р С”Р В° Р СР ВµРЎвЂљР В°-Р С‘Р Р…РЎвЂћР С•РЎР‚Р СР В°РЎвЂ Р С‘Р С‘ Р Р† Р С”Р В°РЎР‚РЎвЂљР С•РЎвЂЎР С”Р Вµ --- */
   .card .meta {
     display: flex;
     align-items: center;
-    gap: 8px;
     margin-bottom: 10px;
     flex-wrap: wrap;
   }
@@ -944,6 +952,11 @@
     0%, 100% { opacity: 0.6; transform: scale(1); }
     50% { opacity: 1; transform: scale(1.4); }
   }
+
+
+
+
+
 
 
 

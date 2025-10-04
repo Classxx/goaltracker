@@ -1,4 +1,4 @@
-﻿
+
 // ===== Enhanced Utilities =====
 const $ = sel => document.querySelector(sel);
 const $$ = sel => Array.from(document.querySelectorAll(sel));
@@ -83,11 +83,23 @@ const state = {
     settings: loadSettings()
 }
 
+const tg = window.Telegram?.WebApp;
+if (tg) {
+  try {
+    tg.ready();
+    tg.expand?.();
+    tg.disableVerticalSwipes?.();
+    tg.setBackgroundColor?.('#0a0b0f');
+  } catch (err) {
+    console.warn('Telegram WebApp init failed', err);
+  }
+}
+
 // ===== Translation System =====
 const translations = {
   ru: {
     appTitle: 'GoalTrack Pro',
-    appSubtitle: 'AI • Аналитика • Геймификация',
+    appSubtitle: 'Задачи • Цели • Аналитика',
     searchPlaceholder: '🔍 Поиск целей…',
     newGoal: 'Новая цель',
     goalName: 'Название',
@@ -198,7 +210,7 @@ const translations = {
   },
   en: {
     appTitle: 'GoalTrack Pro',
-    appSubtitle: 'AI • Analytics • Gamification',
+    appSubtitle: 'Tasks • Goals • Analytics',
     searchPlaceholder: '🔍 Search goals…',
     newGoal: 'New Goal',
     goalName: 'Name',
@@ -737,11 +749,32 @@ function render(){
   filtered.forEach(g => list.appendChild(card(g)));
 }
 // ===== Modals helpers =====
-function showModal(id){ $(id).classList.add('show') }
-function hideModal(id){ $(id).classList.remove('show') }
+function showModal(id){
+  const modal = $(id);
+  if(!modal) return;
+  modal.classList.add('show');
+  document.body.classList.add('modal-open');
+  if(id === '#modalForm'){
+    requestAnimationFrame(()=> $('#f_name')?.focus({ preventScroll: true }));
+  }
+}
+function hideModal(id){
+  const modal = $(id);
+  if(!modal) return;
+  modal.classList.remove('show');
+  if(!document.querySelector('.modal.show')){
+    document.body.classList.remove('modal-open');
+  }
+}
+document.addEventListener('touchmove', (e)=>{
+  if(document.body.classList.contains('modal-open') && !e.target.closest('.sheet')){
+    e.preventDefault();
+  }
+},{passive:false});
 
 // Close all modals immediately on load
 document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('show'));
+document.body.classList.remove('modal-open');
 // ===== Create goal =====
 const fab = document.getElementById('fab');
 const modalForm = document.getElementById('modalForm');
