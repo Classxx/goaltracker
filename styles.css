@@ -286,7 +286,7 @@
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,.7);
-    display: none; /* <-- Р Р†Р В°Р В¶Р Р…Р С•! */
+    display: none; 
     align-items: center;
     justify-content: center;
     padding: 20px;
@@ -727,7 +727,7 @@
   }
 
   .custom-select::after {
-    content: 'в–ј';
+    content: '▼';
     position: absolute;
     right: 16px;
     top: 50%;
@@ -746,7 +746,7 @@
     transform: translateY(-50%) rotate(180deg);
   }
 
-/* Fix centering issues РІР‚вЂќ Р С‘РЎРѓР С—РЎР‚Р В°Р Р†Р В»Р ВµР Р…Р Р…РЎвЂ№Р в„– */
+
 .toolbar {
     display: flex;
     gap: 10px;
@@ -771,8 +771,8 @@
   
   .toolbar select {
     min-width: 160px;
-    height: auto;               /* Р Р…Р Вµ РЎвЂћР С‘Р С”РЎРѓР С‘РЎР‚РЎС“Р ВµР С Р Р†РЎвЂ№РЎРѓР С•РЎвЂљРЎС“ */
-    line-height: 1.4;           /* Р Р†РЎвЂ№РЎР‚Р В°Р Р†Р Р…Р С‘Р Р†Р В°Р Р…Р С‘Р Вµ РЎвЂљР ВµР С”РЎРѓРЎвЂљР В° */
+    height: auto;              
+    line-height: 1.4;          
     padding-top: 12px;
     padding-bottom: 12px;
     overflow: visible;
@@ -921,7 +921,6 @@
     to { opacity: 0; }
   }
 
-  /* --- Р В¦Р ВµР Р…РЎвЂљРЎР‚Р С•Р Р†Р С”Р В° Р СР ВµРЎвЂљР В°-Р С‘Р Р…РЎвЂћР С•РЎР‚Р СР В°РЎвЂ Р С‘Р С‘ Р Р† Р С”Р В°РЎР‚РЎвЂљР С•РЎвЂЎР С”Р Вµ --- */
   .card .meta {
     display: flex;
     align-items: center;
