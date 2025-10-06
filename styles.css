@@ -84,7 +84,7 @@
     background: linear-gradient(180deg, rgba(10,11,15,.85), rgba(10,11,15,.4)); 
     border-bottom: 1px solid rgba(255,255,255,.1);
     border-radius: 0 0 24px 24px;
-    padding-top: 50px;
+    padding-top: 120px;
   }
   .title{ display:flex; align-items:center; gap:16px; }
   .title h1{ 
